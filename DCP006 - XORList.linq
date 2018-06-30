@@ -13,6 +13,7 @@ that converts between nodes and memory addresses.
 
 void Main()
 {
+	//Quick test of the node and memory manager
 	Node n = null;
 	FakeMemory.address(n).Dump("null");
 	Node[] nodes = new UserQuery.Node[10];
@@ -22,6 +23,7 @@ void Main()
 	}
 	Node n1 = nodes[1];
 	FakeMemory.address(n1).Dump("n1");
+	//test of node left/right
 	n1.Dump();
 	n1.Left(null).Dump("Left");
 	n1.Right(null).Dump("Right");
@@ -30,6 +32,7 @@ void Main()
 	n1.Left(nodes[2]).Dump("Left");
 	n1.Right(null).Dump("Right");
 
+	//quick test of XOR list add
 	XORList list = new XORList();
 	Node listStart = new Node(0);
 	list.add(listStart);
@@ -48,12 +51,19 @@ void Main()
 		index=next;
 	}
 	
+	Node end = null;
+	for (int i = 0; i < 11; i++)
+	{
+		end = list.get(i).Dump($"list.get({i})");
+	}
+	end.Right(end.Left(null)).Dump("Ends right: ");
 	FakeMemory.Dump();
 }
 
 class XORList{
 	Node start;
 	Node end;
+	int count=0;
 	public void add(Node n)
 	{
 		if (start == null)
@@ -66,6 +76,18 @@ class XORList{
 		n.Set(end, null);
 		end.Set(end.Left(null), n);
 		end = n;
+		count++;
+	}
+	public Node get(int index) {
+		if (index<0 || index>count) throw new ArgumentOutOfRangeException(nameof(index));
+		Node cNode = start;
+		Node prev = null;
+		while(index-->0){
+			Node next = cNode.Right(prev);
+			prev = cNode;
+			cNode = next;
+		}
+		return cNode;
 	}
 }
 
@@ -96,33 +118,11 @@ class Node
 		return Neighbour(right);
 	}
 }
-//unsafe struct Node{
-//	long both;
-//	public void set(Node? left, Node? right)
-//	{
-//		both =  getAddress(left) ^ getAddress(right);
-//	}
-//	long getAddress(Node? node)
-//	{
-//		Node nv = node.Value;
-//		long l = 0;
-//		if (node.HasValue)
-//		{
-//			nv = ((Node)node.Value);	
-//			l = (long)&nv;				//not fixed memory, so this is unreliable
-//		}
-//		return l;
-//	}
-//	Node* get_pointer(Node node){
-//		return &node;	
-//	}
-////	Node dereference_pointer(int ptr){
-////		
-////	}
-//}
 
+
+//avoiding .net pointers unsafe etc..
 static class FakeMemory{
-	static Random rnd = new Random();
+	static Random rnd = new Random(0);
 	//chose to use dictionary instead of array
 	static Dictionary<int, Node> memory = new Dictionary<int, UserQuery.Node>();
 	static Dictionary<Node, int> lookup = new Dictionary<UserQuery.Node, int>();
