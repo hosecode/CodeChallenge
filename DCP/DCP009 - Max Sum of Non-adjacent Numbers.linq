@@ -11,11 +11,28 @@ Follow-up: Can you do this in O(N) time and constant space?
 */
 void Main()
 {
-	Solve(new int[] { 2, 4, 6, 2, 5 }).Dump("Expect: 2,6,5");
-	Solve(new int[] { 5, 1, 1, 5 }).Dump("Expect: 5, 5");
+	Solve(new int[] { 2, 4, 6, 2, 5 }).Dump("Expect: 13");
+	Solve(new int[] { 5, 1, 1, 5 }).Dump("Expect: 10");
+	Solve(new int[] { }).Dump("Empty Test. Expect: 0");
+	Solve(new int[] { 7 }).Dump("Single Test. Expect: 7");
+	Solve(new int[] { 1, 3 }).Dump("Pair Test 2nd. Expect: 3");
+	Solve(new int[] { 3, 1 }).Dump("Pair Test 1st. Expect: 3");
+	Solve(new int[] { 2, 3, 7 }).Dump("Triplet Test 1st. Expect: 9");
+	Solve(new int[] { 2, 7, 3 }).Dump("Triplet Test 2st. Expect: 7");
+	Solve(new int[] { 2, 3, 2 }).Dump("Delta 1 Test 1st. Expect: 4");
+	Solve(new int[] { 2, 5, 2 }).Dump("Delta 1 Test 2st. Expect: 5");
 }
 
-List<int> Solve(int[] arr){
-	throw new NotImplementedException();
+int Solve(int[] arr)
+{
+	//doubly linked so O(1) insert/remove at head/tail
+	LinkedList<int> prev = new LinkedList<int>();
+	prev.AddLast(0);
+	prev.AddLast(0);
+	for (int i = 0; i < arr.Length; i++)
+	{
+		prev.AddLast(Math.Max(arr[i] + prev.Last.Previous.Value, prev.Last.Value));
+		prev.RemoveFirst();	//Keep memory use constant by purging old results. 
+	}
+	return prev.Last.Value;
 }
-// Define other methods and classes here
