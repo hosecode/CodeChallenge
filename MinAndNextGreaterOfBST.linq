@@ -70,7 +70,8 @@ class Node
 	public int val;
 }
 
-Node Build(int depth){
+Node Build(int depth)
+{
 	return Build(depth, Counter().GetEnumerator());
 }
 Node Build(int depth, IEnumerator<int> nextVal, Node parent=null)
