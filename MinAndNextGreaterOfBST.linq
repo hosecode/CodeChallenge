@@ -1,29 +1,33 @@
 <Query Kind="Program" />
 
+/*
+Write a function that will return the minimum node in a Binary Search Tree (BST).   Node Min(root)
+Write a function that will return the next greater node of a given node. Node Greater(
+*/
 void Main()
 {
 	Node tree = Build(4);
 	
 	Node min = Min(tree);
-	//min.val.Dump("Min");
+	min.val.Dump("Min");
 	
-	Node next;
-	next = min;
-	while (next != null)
+	Node node;
+	node = min;
+	while (node != null)
 	{
-		next.val.Dump("Greater");
-		ParentGreater(next)?.val.Dump("ParentGreater");
-		next = Greator(next);
+		int nodeVal = node.val;
+		(GreaterParent(node)?.val??null).Dump($"Parent Greater than {nodeVal}");
+		((node = Greater(node))?.val??null).Dump($"Greater than {nodeVal}");
 	}
 	
 	"Inject nulls".Dump("TESTING-----");
-	next = Find(tree, 6);
-	next.right = null;	//del node 7
-	Greator(next).val.Dump("Expect 8");
+	node = Find(tree, 6);
+	node.right = null;	//del node 7
+	Greater(node).val.Dump("Expect 8");
 
-	next = Find(tree, 2);
-	next.left = null;  //del node 1
-	Greator(next).val.Dump("Expect 3");
+	node = Find(tree, 2);
+	node.left = null;  //del node 1
+	Greater(node).val.Dump("Expect 3");
 	Min(tree).val.Dump("Min expect 2");
 
 }
@@ -35,7 +39,7 @@ Node Min(Node root){
 	while(root.left!=null) root = root.left;
 	return root;
 }
-private Node ParentGreater(Node n){
+private Node GreaterParent(Node n){
 	//while not root of tree
 	while (n.parent != null){
 		//if n is left child of parent, then parent is greater
@@ -46,10 +50,10 @@ private Node ParentGreater(Node n){
 	//all parents were less, no more parents to check
 	return null;
 }
-Node Greator(Node n){
+Node Greater(Node n){
 	if (n==null) throw new ArgumentNullException("n");
 	//min node of sub tree to right (if exists), else GreaterParent
-	return Min(n.right)??ParentGreater(n);
+	return Min(n.right)??GreaterParent(n);
 }
 class Node
 {
