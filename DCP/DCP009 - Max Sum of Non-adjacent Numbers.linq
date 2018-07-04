@@ -13,7 +13,7 @@ void Main()
 {
 	Solve(new int[] { 2, 4, 6, 2, 5 }).Dump("Expect: 13");
 	Solve(new int[] { 5, 1, 1, 5 }).Dump("Expect: 10");
-	Solve(new int[] { }).Dump("Empty Test. Expect: 0");
+	Solve(new int[] { }).Dump("Empty Test. Expect: 0"); //clarify question specs
 	Solve(new int[] { 7 }).Dump("Single Test. Expect: 7");
 	Solve(new int[] { 1, 3 }).Dump("Pair Test 2nd. Expect: 3");
 	Solve(new int[] { 3, 1 }).Dump("Pair Test 1st. Expect: 3");
@@ -21,6 +21,12 @@ void Main()
 	Solve(new int[] { 2, 7, 3 }).Dump("Triplet Test 2st. Expect: 7");
 	Solve(new int[] { 2, 3, 2 }).Dump("Delta 1 Test 1st. Expect: 4");
 	Solve(new int[] { 2, 5, 2 }).Dump("Delta 1 Test 2st. Expect: 5");
+	Solve(new int[] { 2, 0, 2 }).Dump("Delta 1 Test 2st. Expect: 4");
+	Solve(new int[] { 6, 5, -1 }).Dump("Neg. Expect: 6");
+	Solve(new int[] { -1, 5, -1 }).Dump("Neg. Expect: 5");
+	Solve(new int[] { -1, }).Dump("Neg. Expect: 0"); //clarify, must an element be picked to be a sum  
+	Solve(new int[] { 1, 2, 3, 4 }).Dump("inc. Expect: 6");
+
 }
 
 int Solve(int[] arr)
