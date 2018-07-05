@@ -10,6 +10,7 @@ For example, given s = "abcba" and k = 2, the longest substring with k distinct 
 //Note: clarify: asked for length, but example shows substring
 void Main()
 {
+	"".Dump("BruteForce");
 	BruteForce(0, "abcba").Dump("Expect 0");
 	BruteForce(1, "abcba").Dump("Expect 1");
 
@@ -19,6 +20,7 @@ void Main()
 }
 
 // Define other methods and classes here
+
 
 
 //param k: max allowed distinct characters
@@ -37,7 +39,7 @@ int BruteForce(int k, string s){
 			}
 		}
 		if (j-i> maxLength){
-			s.Substring(i, j-i).Dump();
+			//s.Substring(i, j-i).Dump();
 			maxLength = j-i;
 		}
 		distinct.Clear();
