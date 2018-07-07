@@ -15,18 +15,18 @@ void Main()
 	//If N is known and fixed can store in an array as a circular buffer with a pointer. This would have O(1) lookups and O(n) memory
 	RecentOrders ro = new RecentOrders(1);
 	ro.AddOrder("a");
-	ro.get_last(1).Dump();
+	ro.get_last(1).Dump("Expect: a");
 	ro.AddOrder("b");
 	ro.AddOrder("c");
-	ro.get_last(1).Dump();
+	ro.get_last(1).Dump("Expect: c");
 
 	ro = new RecentOrders(3);
 	ro.AddOrder("a");
 	ro.AddOrder("b");
 	ro.AddOrder("c");
-	ro.get_last(1).Dump();
-	ro.get_last(2).Dump();
-	ro.get_last(3).Dump();
+	ro.get_last(1).Dump("Expect: c");
+	ro.get_last(2).Dump("Expect: b");
+	ro.get_last(3).Dump("Expect: a");
 }
 
 class RecentOrders{
