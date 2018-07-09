@@ -47,30 +47,25 @@ void Main()
 int Solve(string s){
 	StringReader sr = new StringReader(s);
 	string token=null;
-	Stack<string> dirs = new Stack<string>();
-	int depth=0;
-	int curCount=0;
+	Stack<int> dirs = new Stack<int>();
+	dirs.Push(0);
 	int max=0;
 	while (null != (token = sr.ReadLine())) {
-		depth = token.LastIndexOf('\t')+1;
+		int depth = token.LastIndexOf('\t')+1;
+		token = token.Remove(0,depth);
 		if (token.Contains('.')){
-			if (max<curCount+token.Replace("\t","").Length) {
-				max = curCount + token.Replace("\t", "").Length;
+			if (max<dirs.Peek()+token.Length) {
+				max = dirs.Peek() + token.Length;
 				//token.Dump($"Max {max}");
 			}
 		}
 		else {
-			while (depth  < dirs.Count)
+			while (depth+1  < dirs.Count)
 			{
-				curCount -= dirs.Pop().Length + 1;
+				dirs.Pop();
 			}
-			curCount += token.Replace("\t", "").Length + 1;
-			dirs.Push(token.Replace("\t", ""));
+			dirs.Push( dirs.Peek() + token.Length+1);
 		}
 	}
 	return max;
-}
-
-string Tokenize(StringReader sr){
-	return sr.ReadLine();	
 }
