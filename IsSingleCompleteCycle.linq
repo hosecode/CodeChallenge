@@ -1,6 +1,14 @@
 <Query Kind="Program" />
 
+/*
+Given an array of offsets, determine if it forms a single complete cycle. 
+*/
 
+//There are two well known solutions to this. 
+//A: Either track visited and exit early, 
+//B: check that you end at the starting point after the corrent number of moves (I think you must also ensure you reach the start point early)
+
+//This solution checks visited nodes
 void Main()
 {
 	int[] testcase = new int[]{2,4,-1,1,2,6,1,1};
