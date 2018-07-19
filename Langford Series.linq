@@ -17,18 +17,23 @@ void Main()
 	for (int i = 0; i < 20; i++)
 	{
 		solve(i).Dump(i.ToString());
+		opCount.Dump();
 	}
 }
 
-//TODO more performant solution
+int opCount=0;
+//TODO: more performant solution
+//is there one? maybe not
 bool solve(int n)
-{
+{	
+	opCount=0;
 	return solve(new int[n*2],n);
 }
 bool solve(int[] arr, int n){
 	if (n==0) return true;
 	
 	for (int i=0; i+n+1<arr.Length; i++){
+		opCount++;
 		if (arr[i]==0 && arr[i+n+1]==0){
 			arr[i]=n;
 			arr[i+n+1]=n;
