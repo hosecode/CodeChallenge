@@ -1,0 +1,161 @@
+//DCP235-FindMinMax-LimitComparisons
+
+//Given an array of numbers of length N, find both the minimum and maximum using less than 2 * (N - 2) comparisons.
+//javascript
+
+//Should comparison limit be (2*(n-2)+1) instead?!
+
+var testData = [];
+testData.push([...Array(10).keys()]);
+testData.push([...Array(10).keys()].reverse());
+testData.push([...Array(11).keys()]);
+testData.push([...Array(11).keys()].reverse());
+testData.push([5, 6, 4, 3, 2, 5, 6, 8, 89, 4, 3, 3, 5, 5, 7, 4, 3, 2, 9]);
+testData.push([1, 9, 2, 8, 3, 7, 5, 6]);
+testData.push([9, 1, 8, 2, 7, 3, 6, 5]);
+testData.push([1, 1, 1, 1, 1, 1, 1, 1]);
+testData.push([1, 1, 1, 1, 1, 1, 1]);
+testData.push([1, 9, 9, 9, 9, 9, 9, 9]);
+testData.push([1, 9, 9, 9, 9, 9, 9]);
+testData.push([9, 9, 9, 9, 9, 9, 9, 1]);
+testData.push([9, 9, 9, 9, 9, 9, 1]);
+testData.push([9, 2, 3, 4, 5, 61]);
+
+
+var comparisonLimit = function(input) {var n = input.length; return 2*(n-2)+1; };
+class TestResult{
+constructor(success, expected, actual) {
+  this.success = success;
+  this.expected = expected;
+  this.actual = actual;
+}
+}
+var testAssertions = [];
+testAssertions.push({Name:"Max", Description:"Assert expected Max value is returned", that: function(input, output) {var expected = Math.max(...input); var actual=output.max; var success=(actual===expected); return new TestResult(success, expected, actual); }})
+testAssertions.push({Name:"Min", Description:"Assert expected Min value is returned", that: function(input, output) {var expected = Math.min(...input); var actual=output.min; var success=(actual===expected); return new TestResult(success, expected, actual); }})
+testAssertions.push({Name:"Limit", Description:"Assert that number of comparisons is less/equal expected", that: function(input, output) {var expected = comparisonLimit(input); var actual=output.comp; var success=(actual<=expected); return new TestResult(success, expected, actual);} })
+
+
+class Comparator{
+ constructor(){
+   this._count=0;
+ } 
+ get Count(){
+   return this._count;
+ }
+ Compare(a,b){
+   this._count++;
+   return a>b;
+ }
+}
+
+var run = function(){
+  var failCount = 0;
+  var results = []
+  for (var i=0; i<testData.length; i++){
+    var result = validate(testData[i], solve(testData[i]));
+    results.push(result);
+    if (!result.success) failCount+=result.FailCount;
+    //console.log("Input", i, result);
+  }
+  //console.log(results);
+  return {summary:{FailCount: failCount, TestCount:testData.length}, results:results};
+}
+
+
+var validate = function(input, result){
+  var failCount=0;
+  var testCaseCount=0;
+  
+  var validations = [];
+  testAssertions.forEach(function(assert) {
+    testCaseCount++;
+    var testresult = assert.that(input,result);
+    //console.log(testresult);
+    if (testresult.success!==true) failCount++;
+    validations.push({Test:assert.Name, result:testresult});
+  });
+  return {FailCount:failCount, TestCases:testCaseCount, results:validations};
+}
+
+var solve = function(input) { 
+  let comparator = new Comparator();
+ 	if (comparator.Compare(input[1],input[0])) {
+ 	  var max=input[1];
+ 	  var min=input[0];
+  }
+  else {
+ 	  max=input[0];
+ 	  min=input[1];
+  }  
+
+ 	for(i=2; i<input.length; i++){
+    if (comparator.Compare(input[i], max)) max=input[i];
+    else if(comparator.Compare(min, input[i])) min=input[i];
+ 	}
+
+  //var limit=comparisonLimit(input);
+  //console.log({comparisons:  comparator.Count, limit: limit});
+  //console.log("expected",{max: Math.max(...input), min: Math.min(...input)});
+  //var result = {max:max, min:min, comp:comparator.Count, limit: limit};
+  var result = {max:max, min:min, comp:comparator.Count};
+  //console.log(result);
+  return result;
+}
+
+
+console.log("Test Data:");
+testData.forEach(function (o,i) { console.log(i, o);})
+console.log("");
+console.log("Assertions:");
+testAssertions.forEach(function (o, i) { console.log(i, o);})
+console.log("");
+console.log("Running tests");
+var runresult = run();
+console.log("");
+console.warn(runresult.summary);
+console.log("");
+runresult.results.forEach(function (o, i) { console.log(i, o);})
+console.log("");
+console.warn(runresult.summary);
+
+/*
+Console Output:
+
+Test Data:
+0[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+1[ 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ]
+2[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+3[ 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ]
+4[ 5, 6, 4, 3, 2, 5, 6, 8, 89, 4, 3, 3, 5, 5, 7, 4, 3, 2, 9 ]
+5[ 1, 9, 2, 8, 3, 7, 5, 6 ]
+6[ 9, 1, 8, 2, 7, 3, 6, 5 ]
+7[ 1, 1, 1, 1, 1, 1, 1, 1 ]
+8[ 1, 1, 1, 1, 1, 1, 1 ]
+9[ 1, 9, 9, 9, 9, 9, 9, 9 ]
+10[ 1, 9, 9, 9, 9, 9, 9 ]
+11[ 9, 9, 9, 9, 9, 9, 9, 1 ]
+12[ 9, 9, 9, 9, 9, 9, 1 ]
+13[ 9, 2, 3, 4, 5, 61 ]
+Assertions:
+0{ "Name": "Max", "Description": "Assert expected Max value is returned" }
+1{ "Name": "Min", "Description": "Assert expected Min value is returned" }
+2{ "Name": "Limit", "Description": "Assert that number of comparisons is less/equal expected" }
+Running tests
+{ "FailCount": 0, "TestCount": 14 }
+0{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 9, "actual": 9 } }, { "Test": "Min", "result": { "success": true, "expected": 0, "actual": 0 } }, { "Test": "Limit", "result": { "success": true, "expected": 17, "actual": 9 } } ] }
+1{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 9, "actual": 9 } }, { "Test": "Min", "result": { "success": true, "expected": 0, "actual": 0 } }, { "Test": "Limit", "result": { "success": true, "expected": 17, "actual": 17 } } ] }
+2{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 10, "actual": 10 } }, { "Test": "Min", "result": { "success": true, "expected": 0, "actual": 0 } }, { "Test": "Limit", "result": { "success": true, "expected": 19, "actual": 10 } } ] }
+3{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 10, "actual": 10 } }, { "Test": "Min", "result": { "success": true, "expected": 0, "actual": 0 } }, { "Test": "Limit", "result": { "success": true, "expected": 19, "actual": 19 } } ] }
+4{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 89, "actual": 89 } }, { "Test": "Min", "result": { "success": true, "expected": 2, "actual": 2 } }, { "Test": "Limit", "result": { "success": true, "expected": 35, "actual": 33 } } ] }
+5{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 9, "actual": 9 } }, { "Test": "Min", "result": { "success": true, "expected": 1, "actual": 1 } }, { "Test": "Limit", "result": { "success": true, "expected": 13, "actual": 13 } } ] }
+6{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 9, "actual": 9 } }, { "Test": "Min", "result": { "success": true, "expected": 1, "actual": 1 } }, { "Test": "Limit", "result": { "success": true, "expected": 13, "actual": 13 } } ] }
+7{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 1, "actual": 1 } }, { "Test": "Min", "result": { "success": true, "expected": 1, "actual": 1 } }, { "Test": "Limit", "result": { "success": true, "expected": 13, "actual": 13 } } ] }
+8{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 1, "actual": 1 } }, { "Test": "Min", "result": { "success": true, "expected": 1, "actual": 1 } }, { "Test": "Limit", "result": { "success": true, "expected": 11, "actual": 11 } } ] }
+9{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 9, "actual": 9 } }, { "Test": "Min", "result": { "success": true, "expected": 1, "actual": 1 } }, { "Test": "Limit", "result": { "success": true, "expected": 13, "actual": 13 } } ] }
+10{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 9, "actual": 9 } }, { "Test": "Min", "result": { "success": true, "expected": 1, "actual": 1 } }, { "Test": "Limit", "result": { "success": true, "expected": 11, "actual": 11 } } ] }
+11{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 9, "actual": 9 } }, { "Test": "Min", "result": { "success": true, "expected": 1, "actual": 1 } }, { "Test": "Limit", "result": { "success": true, "expected": 13, "actual": 13 } } ] }
+12{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 9, "actual": 9 } }, { "Test": "Min", "result": { "success": true, "expected": 1, "actual": 1 } }, { "Test": "Limit", "result": { "success": true, "expected": 11, "actual": 11 } } ] }
+13{ "FailCount": 0, "TestCases": 3, "results": [ { "Test": "Max", "result": { "success": true, "expected": 61, "actual": 61 } }, { "Test": "Min", "result": { "success": true, "expected": 2, "actual": 2 } }, { "Test": "Limit", "result": { "success": true, "expected": 9, "actual": 8 } } ] }
+{ "FailCount": 0, "TestCount": 14 }
+*/
